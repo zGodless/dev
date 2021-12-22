@@ -1,0 +1,8 @@
+一、委托
+事件通过委托来传递消息，可以看作是一个回调的过程
+委托的调用：Invoke 
+异步调用：BeginInvoke  
+异步回调：AsyncCallback 
+调用结果：EndInvoke(阻塞)
+二、面试题
+https://blog.csdn.net/qq_41231360/article/details/89841566
