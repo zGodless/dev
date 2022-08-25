@@ -1,0 +1,100 @@
+复习：1、restful架构   一种接口服务架构风格 特点：无状态（服务端不存储用户登录状态？登录服务器同步用户状态），mime（json/application/json）统一、动作get/post/delete/put统一、状态码统一、接口命名风格，文档导向，一个url对应一个资源，版本控制请求头加-version，同时维护新旧版本 
+
+知识校正： 一种web服务架构风格 目标：构建具有良好拓展性的分布式系统   指导原则包括：客户/服务器模型、层次化系统（不固定与一个服务器交互）、可缓存、无状态、统一的接口（url对应资源、自描述（get/post/delete...）、HATEOAS（后端驱动，前后端解耦，亦即所谓文档导向，请求->返回可用接口列表->进行下一个动作））  通常基于HTTP协议 版本管理：1、请求头accept中加版本号2、url加版本号  用户登录状态保存：除了登录服务器，可用代理登录机智：1、基于HTTPS的Basic Access Authentication  2、Cookie/Session
+
+
+学习：
+1、Basic Access Authentication：401 Unauthorized，未被授权的）状态码 403响应状态，说明用户证书权限不够  407（必须提供代理证书） https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Authentication
+    响应消息首部指定了为获取资源访问权限而进行身份验证的方法：(校验权限)
+        WWW-Authenticate: <type> realm=<realm>
+        Proxy-Authenticate: <type> realm=<realm>
+    向（代理）服务器证明用户代理身份的凭证（校验身份）
+        Authorization: <type> <credentials>
+        Proxy-Authorization: <type> <credentials>
+校验方案：（常见）
+    1、Basic:base64编码，本身不安全，与https/tls协议搭配使用。各web服务器有自己的基本身份验证方法：1、Apache:.htaccess 和 a .htpasswd 文件 2、nginx：location /status {
+                auth_basic           "Access to the staging site";
+                auth_basic_user_file /etc/apache2/.htpasswd;
+            }
+    2、Bearer  https://www.cnblogs.com/lori/p/11246611.html
+        Bearer验证中的凭证称为BEARER_TOKEN，或者是access_token，它的颁发和验证完全由我们自己的应用程序来控制，而不依赖于系统和Web服务器，Bearer验证的标准请求方式如下：
+
+        Authorization: Bearer [BEARER_TOKEN] 
+
+        Json web token (JWT), 是为了在网络应用环境间传递声明而执行的一种基于JSON的开放标准[RFC 7519(https://tools.ietf.org/html/rfc7519)。该token被设计为紧凑且安全的，特别适用于分布式站点的单点登录（SSO）场景。JWT的声明一般被用来在身份提供者和服务提供者间传递被认证的用户身份信息，以便于从资源服务器获取资源，也可以增加一些额外的其它业务逻辑所必须的声明信息，该token也可直接被用于认证，也可被加密。
+        
+        jwt主要包含以下三个内容：
+            头部 Header
+            载荷 Payload
+            签名 Signature
+            Jwt Token包含了使用.分隔的三部分
+
+            {Header 头部}.{Payload 负载}.{Signature 签名}
+
+        头部 Header
+            Header 一般由两个部分组成： alg  typ
+            alg是是所使用的hash算法，如：HMAC SHA256或RSA，typ是Token的类型，在这里就是：JWT。
+            {
+            "alg": "HS256",
+            "typ": "JWT"
+            }
+
+            然后使用Base64Url编码成第一部分
+                eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.<second part>.<third part>
+        
+        载荷 Payload
+            这一部分是JWT主要的信息存储部分，其中包含了许多种的声明（claims）。
+
+            Claims的实体一般包含用户和一些元数据，这些claims分成三种类型：
+
+            reserved claims：预定义的 一些声明，并不是强制的但是推荐，它们包括 iss (issuer), exp (expiration time), sub (subject),aud(audience) 等（这里都使用三个字母的原因是保证 JWT 的紧凑）。
+            public claims: 公有声明，这个部分可以随便定义，但是要注意和 IANA JSON Web Token 冲突。
+            private claims: 私有声明，这个部分是共享被认定信息中自定义部分。
+            一个简单的Pyload可以是这样子的：
+
+            {
+            "user_name": "admin", 
+            "scope": [
+                "read","write","del"
+            ], 
+            "organization": "admin", 
+            "exp": 1531975621, 
+            "authorities": [
+                "ADMIN"
+            ], 
+            "jti": "23408d38-8cdc-4460-beac-24c76dc7629a", 
+            "client_id": "webapp"
+            }
+            这部分同样使用Base64Url编码成第二部分
+
+            eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.<third part>
+        签名 Signature
+            Signature是用来验证发送者的JWT的同时也能确保在期间不被篡改。
+
+            签名哈希部分是对上面两部分数据签名，通过指定的算法生成哈希，以确保数据不会被篡改。
+            首先，需要指定一个密码（secret）。该密码仅仅为保存在服务器中，并且不能向用户公开。然后，使用标头中指定的签名算法（默认情况下为HMAC SHA256）根据以下公式生成签名。
+
+            使用Base64编码后的header和payload以及一个秘钥，使用header中指定签名算法进行签名。
+
+            HMACSHA256(base64UrlEncode(header) + "." + base64UrlEncode(payload),
+            secret)
+            结果
+
+            eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ
+            base64UrlEncode
+
+        如前所述，JWT头和有效载荷序列化的算法都用到了Base64URL。该算法和常见Base64算法类似，稍有差别。
+        作为令牌的JWT可以放在URL中（例如api.example/?token=xxx）。 Base64中用的三个字符是"+"，"/"和"="，由于在URL中有特殊含义，因此Base64URL中对他们做了替换："="去掉，"+"用"-"替换，"/"用"_"替换，这就是Base64URL算法，很简单把。
+
+        JWT的工作过程
+            客户端接收服务器返回的JWT，将其存储在Cookie或localStorage中。
+
+            此后，客户端将在与服务器交互中都会带JWT。如果将它存储在Cookie中，就可以自动发送，但是不会跨域，因此一般是将它放入HTTP请求的Header Authorization字段中。
+
+            Authorization: Bearer JWT_TOKEN
+            当跨域时，也可以将JWT被放置于POST请求的数据主体中。
+
+        使用JWT具有如下好处
+            通用：因为json的通用性，所以JWT是可以进行跨语言支持的，像JAVA,JavaScript,NodeJS,PHP等很多语言都可以使用。
+            紧凑：JWT的构成非常简单，字节占用很小，可以通过 GET、POST 等放在 HTTP 的 header 中，非常便于传输。
+            扩展：JWT是自我包涵的，包含了必要的所有信息，不需要在服务端保存会话信息, 非常易于应用的扩展。
