@@ -1,0 +1,6 @@
+1、复习。  restful架构  一种web服务架构风格 特征：无状态（登录服务器、代理？）、客户端/服务器模型、 hateoas(后端驱动前端解耦，文档指示后续动作)、一致性（1、动作get/post... 2、MME 3、响应状态码 ）、一个url对应一个资源
+            HTTP简单用户身份验证 1、basic(与https同用保证安全性，因为本身是明文的base64加密) 2、bearer（401/403/417？包括头部、中间？、校验码）  
+    校正： restful 层次化系统不固定与一个服务器交互、版本控制（请求头accept中加、url加）、自描述性（get/post...）、可缓存、代理1、basic 2、Cookie/Session
+            http身份验证： 401 Unauthorized，未被授权的）状态码 403响应状态，说明用户证书权限不够  407（必须提供代理证书） base校验各web服务器有自己的基本身份验证方法（.htpasswd文件等）  Bearer: token验证  配合jwt加密（头部Header、载荷Payload、签名Signature）jwt的优点：通用、体积小、拓展性
+
+
