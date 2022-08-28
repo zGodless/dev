@@ -1,8 +1,0 @@
-1、复习。 restful 无状态（basic/bearer）、客户端/服务器模型、自描述性、可缓存、HATEOAS、多层次 
-    浏览器缓存机制：http缓存（过期判断）、websql/indexDb、cookie（用户数据、加密）、localstorage(大小限制，不宜过大)、sessionstorage(关闭浏览器删除)、application cache(离线缓存)
-
-    校正：版本控制   401：Unauthorized,未被授权   403：用户证书权限不够   407：缺少证书   bearer:jwt加密：头部、信息中部、签名   优点：通用、体积小、拓展性
-
-学习。
-1、委托
-    
