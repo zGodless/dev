@@ -3,3 +3,5 @@
 3、关于restful架构的无状态：https://cloud.tencent.com/developer/news/2529672
 4、restful架构的web服务如何在遵循无状态原则的前提下保持用户状态
 5、rest 全拼是什么 
+
+1、http常用状态码对应解释
