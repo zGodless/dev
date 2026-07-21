@@ -17,3 +17,7 @@
     设置开机自启：sudo systemctl enable docker
     验证安装：docker --version 和 docker run hello-world
     查看镜像列表：docker images
+    查看进程状态：docker ps(process status)
+    创建并运行一个容器：docker run
+    容器启动：docker start
+    容器停止：docker stop
