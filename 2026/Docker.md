@@ -1,4 +1,7 @@
 #
+ ## 一个部署运行命令：docker run -d --name webgo -p 8080:8080 -v /app/web1:/app web1-app
+    解析命令：运行webgo这个镜像，并将容器的8080端口映射到宿主机的8080端口，
+            同时使用挂载卷将容器的/app路径映射到宿主机的/app/web1路径下。
 1、Docker是软件部署技术，使用容器部署
 2、与虚拟机的区别：docker所有容器共用一个系统内核，而虚拟机每个都包含一个完整独立的操作系统，docker更轻量
 3、docker镜像仓库：hub.docker.com
