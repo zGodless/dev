@@ -129,3 +129,6 @@ compose.yaml：
     复杂权限和网络策略
     通常会考虑 Kubernetes、Docker Swarm、Nomad 之类的系统。
     但对于很多个人项目、小团队项目、单机服务，Compose 已经非常够用。
+
+ ## Docker Swarm 集群工具
+    初始化：docker swarm init
