@@ -17,3 +17,5 @@
 ## 安全
  ### 免杀 
      https://www.cnblogs.com/mykr3/p/17905122.html
+ ### BypassUAC
+     https://stack.chaitin.com/techblog/detail/43
