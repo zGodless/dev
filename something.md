@@ -19,3 +19,7 @@
      https://www.cnblogs.com/mykr3/p/17905122.html
  ### BypassUAC
      https://stack.chaitin.com/techblog/detail/43
+
+## 技术
+ ### 虚拟多屏
+    https://cloud.tencent.com/developer/article/2428215
